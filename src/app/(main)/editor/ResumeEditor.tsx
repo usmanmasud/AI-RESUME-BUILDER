@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import PersonalInforForm from "./forms/personalInforForm";
 
 const ResumeEditor = () => {
   return (
@@ -13,9 +14,11 @@ const ResumeEditor = () => {
           will be auto matically saved
         </p>
       </header>
-      <main className="relative h-36 grow">
-        <div className="absolute bottom-0 top-0 flex w-full">
-          <div className="w-full md:w-1/2">left</div>
+      <main className="relative grow">
+        <div className="bottom-0 top-0 flex w-full">
+          <div className="w-full p-3 md:w-1/2">
+            <PersonalInforForm />
+          </div>
           <div className="grow md:border-r" />
           <div className="hidden w-1/2 md:flex">right</div>
         </div>
