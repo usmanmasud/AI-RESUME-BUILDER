@@ -11,15 +11,28 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { EditorFormProps } from "@/lib/types";
+import { useEffect } from "react";
 
-const GenerateInfoForm = () => {
+const GenerateInfoForm = ({ resumeData, setResumeData }: EditorFormProps) => {
   const form = useForm<GeneralInfoValues>({
     resolver: zodResolver(GeneralInfoSchema),
     defaultValues: {
-      title: "",
-      description: "",
+      title: resumeData.title || "",
+      description: resumeData.description || "",
     },
   });
+
+  useEffect(() => {
+    const { unsubscribe } = form.watch(async (values) => {
+      const isValid = await form.trigger();
+      if (!isValid) return;
+      // update the form data in the database
+
+      setResumeData({ ...resumeData, ...values });
+    });
+    return unsubscribe;
+  }, [form, resumeData, setResumeData]);
 
   return (
     <div className="mx-auto max-w-xl space-y-6">

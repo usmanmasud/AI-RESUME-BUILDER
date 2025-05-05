@@ -7,34 +7,36 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { EditorFormProps } from "@/lib/types";
 import { personalInfoSchema, PersonalInfoValues } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-const PersonalInforForm = () => {
+const PersonalInforForm = ({ resumeData, setResumeData }: EditorFormProps) => {
   const form = useForm<PersonalInfoValues>({
     resolver: zodResolver(personalInfoSchema),
     defaultValues: {
-      photo: undefined,
-      firstName: "",
-      lastName: "",
-      jobTitle: "",
-      city: "",
-      country: "",
-      phone: "",
-      email: "",
+      firstName: resumeData.firstName || "",
+      lastName: resumeData.lastName || "",
+      jobTitle: resumeData.jobTitle || "",
+      city: resumeData.city || "",
+      country: resumeData.country || "",
+      phone: resumeData.phone || "",
+      email: resumeData.email || "",
     },
   });
 
   useEffect(() => {
-    const { unsubscribe } = form.watch(async () => {
+    const { unsubscribe } = form.watch(async (values) => {
       const isValid = await form.trigger();
       if (!isValid) return;
       // update the form data in the database
+
+      setResumeData({ ...resumeData, ...values });
     });
     return unsubscribe;
-  }, [form]);
+  }, [form, resumeData, setResumeData]);
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
