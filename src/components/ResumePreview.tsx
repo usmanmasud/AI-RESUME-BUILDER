@@ -28,6 +28,8 @@ const ResumePreview = ({ resumeData, clasName }: ResumePreviewProps) => {
         className={cn("space-y-6 p-6", !width && "invisible")}
       >
         <PersonalInfoHeader resumeData={resumeData} />
+        <SummarySection resumeData={resumeData} />
+        <WorkExperienceSection resumeData={resumeData} />
       </div>
     </div>
   );
@@ -43,7 +45,7 @@ function PersonalInfoHeader({ resumeData }: ResumeSectionProps) {
   const { phone, firstName, lastName, jobTitle, city, country, photo, email } =
     resumeData;
 
-  const [photoScr, setPhotoScr] = useState(phone instanceof File ? "" : photo);
+  const [photoScr, setPhotoScr] = useState(photo instanceof File ? "" : photo);
 
   useEffect(() => {
     const objectURl = photo instanceof File ? URL.createObjectURL(photo) : "";
@@ -69,8 +71,56 @@ function PersonalInfoHeader({ resumeData }: ResumeSectionProps) {
           <p className="text-3xl font-bold">
             {firstName} {lastName}
           </p>
+          <p className="font-medium">{jobTitle}</p>
         </div>
+        <p className="text-xs text-gray-500">
+          {city}
+          {city && country ? ", " : ""}
+          {country}
+          {city || (country && (phone || email)) ? " • " : ""}
+          {[phone, email].filter(Boolean).join(" • ")}
+        </p>
       </div>
     </div>
+  );
+}
+
+function SummarySection({ resumeData }: ResumeSectionProps) {
+  const { summary } = resumeData;
+
+  if (!summary) return null;
+
+  return (
+    <>
+      <hr className="border-2" />
+      <div className="break-inside-avoid space-y-3">
+        <p className="text-lg font-semibold">Professional profile</p>
+        <div className="whitespace-pre-line text-sm">{summary}</div>
+      </div>
+    </>
+  );
+}
+
+function WorkExperienceSection({ resumeData }: ResumeSectionProps) {
+  const { workExperiences } = resumeData;
+
+  const workExperiencesNotEmpty = workExperiences?.filter(
+    (exp) => Object.values(exp).filter(Boolean).length > 0,
+  );
+
+  if (!workExperiencesNotEmpty?.length) return null;
+
+  return (
+    <>
+      <hr className="border-2" />
+      <div className="space-y-3">
+        <p className="text-lg font-semibold">Work experience</p>
+        {workExperiencesNotEmpty.map((exp, index) => (
+          <div key={index} className="break-inside-avoid space-y-1">
+            <div className="font-sm flex items-center justify-between font-semibold"></div>
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
