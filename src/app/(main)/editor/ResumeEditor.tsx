@@ -33,7 +33,7 @@ const ResumeEditor = () => {
         </p>
       </header>
       <main className="relative grow">
-        <div className="bottom-0 top-0 flex w-full">
+        <div className="bottom-0 top-0 flex min-h-screen w-full">
           <div className="w-full space-y-6 p-3 md:w-1/2">
             <BreadCrumbs currentStep={currentStep} setCurrentStep={setStep} />
             {FormComponent && (
