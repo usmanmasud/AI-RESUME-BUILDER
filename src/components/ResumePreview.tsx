@@ -3,6 +3,8 @@ import { cn } from "@/lib/utils";
 import { ResumeValues } from "@/lib/validation";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { formatDate } from "date-fns";
+import { Badge } from "./ui/badge";
 
 interface ResumePreviewProps {
   resumeData: ResumeValues;
@@ -30,6 +32,8 @@ const ResumePreview = ({ resumeData, clasName }: ResumePreviewProps) => {
         <PersonalInfoHeader resumeData={resumeData} />
         <SummarySection resumeData={resumeData} />
         <WorkExperienceSection resumeData={resumeData} />
+        <EducationSection resumeData={resumeData} />
+        <SkillsSection resumeData={resumeData} />
       </div>
     </div>
   );
@@ -104,9 +108,11 @@ function SummarySection({ resumeData }: ResumeSectionProps) {
 function WorkExperienceSection({ resumeData }: ResumeSectionProps) {
   const { workExperiences } = resumeData;
 
-  const workExperiencesNotEmpty = workExperiences?.filter(
-    (exp) => Object.values(exp).filter(Boolean).length > 0,
-  );
+  const workExperiencesNotEmpty = Array.isArray(workExperiences)
+    ? workExperiences.filter(
+        (exp) => exp && Object.values(exp).filter(Boolean).length > 0,
+      )
+    : [];
 
   if (!workExperiencesNotEmpty?.length) return null;
 
@@ -117,9 +123,80 @@ function WorkExperienceSection({ resumeData }: ResumeSectionProps) {
         <p className="text-lg font-semibold">Work experience</p>
         {workExperiencesNotEmpty.map((exp, index) => (
           <div key={index} className="break-inside-avoid space-y-1">
-            <div className="font-sm flex items-center justify-between font-semibold"></div>
+            <div className="font-sm flex items-center justify-between font-semibold">
+              <span>{exp?.position}</span>
+              {exp?.startDate && (
+                <span>
+                  {formatDate(exp.startDate, "MM/yyyy")} -{" "}
+                  {exp.endDate ? formatDate(exp.endDate, "MM/yyyy") : "Present"}
+                </span>
+              )}
+            </div>
+            <p className="text-xs font-semibold">{exp?.company}</p>
+            <div className="whitespace-pre-line text-xs">
+              {exp?.description}
+            </div>
           </div>
         ))}
+      </div>
+    </>
+  );
+}
+
+function EducationSection({ resumeData }: ResumeSectionProps) {
+  const { education } = resumeData;
+  const educationsNotEmpty = Array.isArray(education)
+    ? education.filter(
+        (edu) => edu && Object.values(edu).filter(Boolean).length > 0,
+      )
+    : [];
+
+  if (!educationsNotEmpty?.length) return null;
+
+  return (
+    <>
+      <hr className="border-2" />
+      <div className="space-y-3">
+        <p className="text-lg font-semibold">Education</p>
+        {educationsNotEmpty.map((edu, index) => (
+          <div key={index} className="break-inside-avoid space-y-1">
+            <div className="font-sm flex items-center justify-between font-semibold">
+              <span>{edu?.degree}</span>
+              {edu?.startDate && (
+                <span>
+                  {formatDate(edu.startDate, "MM/yyyy")}{" "}
+                  {edu.endDate ? `- ${formatDate(edu.endDate, "MM/yyyy")}` : ""}
+                </span>
+              )}
+            </div>
+            <p className="text-xs font-semibold">{edu?.school}</p>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+}
+
+function SkillsSection({ resumeData }: ResumeSectionProps) {
+  const { skills } = resumeData;
+
+  if (!skills?.length) return null;
+
+  return (
+    <>
+      <hr className="border-2" />
+      <div className="skew-y-3 break-inside-avoid">
+        <p className="text-lg font-semibold">Skills</p>
+        <div className="flex break-inside-avoid flex-wrap gap-2">
+          {skills.map((skill, index) => (
+            <Badge
+              key={index}
+              className="rounded-md bg-black text-white hover:bg-black"
+            >
+              {skill}
+            </Badge>
+          ))}
+        </div>
       </div>
     </>
   );
