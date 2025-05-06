@@ -102,8 +102,8 @@ function EducationItem({ form, index, remove }: EducationItemProps) {
             <FormLabel>Degree</FormLabel>
             <FormControl>
               <Input {...field} autoFocus />
-              <FormMessage />
             </FormControl>
+            <FormMessage />
           </FormItem>
         )}
       />
@@ -115,8 +115,8 @@ function EducationItem({ form, index, remove }: EducationItemProps) {
             <FormLabel>School</FormLabel>
             <FormControl>
               <Input {...field} />
-              <FormMessage />
             </FormControl>
+            <FormMessage />
           </FormItem>
         )}
       />
@@ -133,8 +133,8 @@ function EducationItem({ form, index, remove }: EducationItemProps) {
                   type="date"
                   value={field.value?.slice(0, 10)}
                 />
-                <FormMessage />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -150,8 +150,8 @@ function EducationItem({ form, index, remove }: EducationItemProps) {
                   type="date"
                   value={field.value?.slice(0, 10)}
                 />
-                <FormMessage />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
