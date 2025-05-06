@@ -109,8 +109,9 @@ function WorkExperienceItem({ form, index, remove }: WorkExperienceItemProps) {
             <FormLabel>Job title</FormLabel>
             <FormControl>
               <Input {...field} autoFocus />
-              <FormMessage />
             </FormControl>
+
+            <FormMessage />
           </FormItem>
         )}
       />
@@ -122,8 +123,8 @@ function WorkExperienceItem({ form, index, remove }: WorkExperienceItemProps) {
             <FormLabel>Company</FormLabel>
             <FormControl>
               <Input {...field} />
-              <FormMessage />
             </FormControl>
+            <FormMessage />
           </FormItem>
         )}
       />
@@ -140,8 +141,9 @@ function WorkExperienceItem({ form, index, remove }: WorkExperienceItemProps) {
                   type="date"
                   value={field.value?.slice(0, 10)}
                 />
-                <FormMessage />
               </FormControl>
+
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -157,8 +159,8 @@ function WorkExperienceItem({ form, index, remove }: WorkExperienceItemProps) {
                   type="date"
                   value={field.value?.slice(0, 10)}
                 />
-                <FormMessage />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -175,8 +177,8 @@ function WorkExperienceItem({ form, index, remove }: WorkExperienceItemProps) {
             <FormLabel>Description</FormLabel>
             <FormControl>
               <Textarea {...field} />
-              <FormMessage />
             </FormControl>
+            <FormMessage />
           </FormItem>
         )}
       />
