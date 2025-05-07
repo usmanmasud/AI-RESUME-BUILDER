@@ -12,6 +12,7 @@ import { summarySchema } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import GenerateSummaryBtn from "./GenerateSummaryBtn";
 
 const SummaryForm = ({ resumeData, setResumeData }: EditorFormProps) => {
   const form = useForm({
@@ -56,6 +57,12 @@ const SummaryForm = ({ resumeData, setResumeData }: EditorFormProps) => {
                   />
                 </FormControl>
                 <FormMessage />
+                <GenerateSummaryBtn
+                  resumeData={resumeData}
+                  oSummaryGenerated={(summary) =>
+                    form.setValue("summary", summary)
+                  }
+                />
               </FormItem>
             )}
           />
