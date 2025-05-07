@@ -49,8 +49,8 @@ interface ResumeSectionProps {
 function PersonalInfoHeader({ resumeData }: ResumeSectionProps) {
   const {
     phone,
-    firstName,
-    lastName,
+    FirstName,
+    LastName,
     jobTitle,
     city,
     country,
@@ -97,7 +97,7 @@ function PersonalInfoHeader({ resumeData }: ResumeSectionProps) {
               color: colorHex,
             }}
           >
-            {firstName} {lastName}
+            {FirstName} {LastName}
           </p>
           <p
             className="font-medium"

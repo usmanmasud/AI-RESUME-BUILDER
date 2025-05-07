@@ -18,8 +18,8 @@ const PersonalInforForm = ({ resumeData, setResumeData }: EditorFormProps) => {
   const form = useForm<PersonalInfoValues>({
     resolver: zodResolver(personalInfoSchema),
     defaultValues: {
-      firstName: resumeData.firstName || "",
-      lastName: resumeData.lastName || "",
+      FirstName: resumeData.FirstName || "",
+      LastName: resumeData.LastName || "",
       jobTitle: resumeData.jobTitle || "",
       city: resumeData.city || "",
       country: resumeData.country || "",
@@ -88,7 +88,7 @@ const PersonalInforForm = ({ resumeData, setResumeData }: EditorFormProps) => {
           <div className="grid grid-cols-2 gap-3">
             <FormField
               control={form.control}
-              name="firstName"
+              name="FirstName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>First Name</FormLabel>
@@ -101,7 +101,7 @@ const PersonalInforForm = ({ resumeData, setResumeData }: EditorFormProps) => {
             />
             <FormField
               control={form.control}
-              name="lastName"
+              name="LastName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Last Name</FormLabel>

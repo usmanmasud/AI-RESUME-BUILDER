@@ -12,7 +12,12 @@ export async function saveResume(values: ResumeValues) {
   console.log("the data sent to backend ", values);
 
   const { photo, workExperiences, education, ...resumeValues } =
-    resumeSchema.parse(values);
+    resumeSchema.parse({
+      ...values,
+      workExperiences: values.workExperiences || [],
+      education: values.education || [],
+      skills: values.skills || [],
+    });
 
   const { userId } = await auth();
 
