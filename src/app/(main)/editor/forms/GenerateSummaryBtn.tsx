@@ -38,6 +38,7 @@ const GenerateSummaryBtn = ({
 
   return (
     <LoadingBtn
+      disabled
       variant="outline"
       type="button"
       onClick={handleClick}

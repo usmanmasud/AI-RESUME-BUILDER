@@ -1,7 +1,13 @@
 "use server";
 
 import openai from "@/lib/openai";
-import { generateSummaryInput, generateSummarySchema } from "@/lib/validation";
+import {
+  generateSummaryInput,
+  generateSummarySchema,
+  GenerateWorkExperienceInput,
+  generateWorkExperienceSchema,
+  workExperience,
+} from "@/lib/validation";
 
 export async function generateSummary(input: generateSummaryInput) {
   // TODO FOR PREMIUM USERS ONLY
@@ -47,4 +53,47 @@ export async function generateSummary(input: generateSummaryInput) {
   }
 
   return aiResponse;
+}
+
+export async function generateWorkExperience(
+  input: GenerateWorkExperienceInput,
+) {
+  // Block for non -premium users
+
+  const { description } = generateWorkExperienceSchema.parse(input);
+
+  const systemMessage = `You are a resume generator. You will be given a description of the work experience. Your task is to generate a work experience entry for the resume based on the provided information. The work experience should be concise and highlight the most relevant experiences and skills. The work experience should be in English. Only return the work experience without any additional text or explanation. Keep it concise and professional. You can omit fields if they can't be inferred from the provided information, but don't add any new ones.
+
+  Format:
+  - Job Title: <job title>
+  - Company: <company name>
+  - Start Date: <format: YYYY-MM-DD> (only if provided)
+  - End Date: <format: YYYY-MM-DD> (only if provided)
+  - Description: <an optimized description in bullet format, inferred from the provided information>`;
+
+  const userMessage = `Please generate a work experience entry from this description: ${description || "N/A"}.`;
+
+  const completion = await openai.chat.completions.create({
+    model: "gpt-4o-mini",
+    messages: [
+      { role: "system", content: systemMessage },
+      { role: "user", content: userMessage },
+    ],
+  });
+
+  const aiResponse = completion.choices[0].message.content;
+
+  if (!aiResponse) {
+    throw new Error("No response from OpenAI API");
+  }
+
+  console.log(aiResponse);
+
+  return {
+    position: aiResponse.match(/Job title: (.*)/)?.[1] || "",
+    company: aiResponse.match(/Company: (.*)/)?.[1] || "",
+    description: (aiResponse.match(/Description:([\s\S]*)/)?.[1] || "").trim(),
+    startDate: aiResponse.match(/Start date: (\d{4}-\d{2}-\d{2})/)?.[1],
+    endDate: aiResponse.match(/End date: (\d{4}-\d{2}-\d{2})/)?.[1],
+  } satisfies workExperience;
 }
