@@ -1,10 +1,30 @@
 "use client";
 
 import ResumePreview from "@/components/ResumePreview";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useToast } from "@/hooks/use-toast";
 import { ResumeServerData } from "@/lib/types";
 import { mapToResumeValues } from "@/lib/utils";
 import { formatDate } from "date-fns";
+import { MoreVertical, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { useState, useTransition } from "react";
+import { deleteResume } from "./actions";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import LoadingBtn from "@/components/LoadingBtn";
 
 interface ResumeItemProps {
   resume: ResumeServerData;
@@ -14,7 +34,7 @@ const ResumeItem = ({ resume }: ResumeItemProps) => {
   const wasUpdated = resume.updatedAt !== resume.createdAt;
 
   return (
-    <div className="group rounded-lg border border-transparent bg-secondary p-3 transition-colors hover:border-border">
+    <div className="group relative rounded-lg border border-transparent bg-secondary p-3 transition-colors hover:border-border">
       <div className="space-y-3">
         <Link
           href={`/editor?resumeId=${resume.id}`}
@@ -42,8 +62,103 @@ const ResumeItem = ({ resume }: ResumeItemProps) => {
           <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white to-transparent" />
         </Link>
       </div>
+      <MoreMenu resumeId={resume.id} />
     </div>
   );
 };
 
 export default ResumeItem;
+
+interface MoreMenuProps {
+  resumeId: string;
+}
+
+function MoreMenu({ resumeId }: MoreMenuProps) {
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+
+  return (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="absolute right-0.5 top-0.5 opacity-0 transition-opacity group-hover:opacity-100"
+          >
+            <MoreVertical className="size-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem
+            className="flex items-center gap-2"
+            onClick={() => setShowDeleteConfirmation(true)}
+          >
+            <Trash2 className="size-4" />
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <DeleteConfirmationDialoq
+        resumeId={resumeId}
+        open={showDeleteConfirmation}
+        onOpenChange={setShowDeleteConfirmation}
+      />
+    </>
+  );
+}
+
+interface DeleteConfirmationDialoqProps {
+  resumeId: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+function DeleteConfirmationDialoq({
+  resumeId,
+  open,
+  onOpenChange,
+}: DeleteConfirmationDialoqProps) {
+  const { toast } = useToast();
+
+  const [isPending, startTransition] = useTransition();
+
+  async function handleDelete() {
+    startTransition(async () => {
+      try {
+        await deleteResume(resumeId);
+
+        onOpenChange(false);
+      } catch (error) {
+        console.log(error);
+        toast({
+          description: "Something went wrong. try again later.",
+          variant: "destructive",
+        });
+      }
+    });
+  }
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Delete resume?</DialogTitle>
+          <DialogDescription>
+            This will permanently this resume. this action cannot be undone.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <LoadingBtn
+            variant="destructive"
+            onClick={handleDelete}
+            loading={isPending}
+          >
+            Delete
+          </LoadingBtn>
+          <Button variant="secondary" onClick={() => onOpenChange(false)}>
+            Cancel
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
