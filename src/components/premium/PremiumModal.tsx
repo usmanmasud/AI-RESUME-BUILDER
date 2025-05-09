@@ -7,6 +7,7 @@ import usePremiumModal from "@/hooks/usePremiumModal";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { createCheckoutSession } from "./actions";
+import { env } from "@/env";
 
 const premiumFeatures = ["AI tools", "Up to 3 resumes"];
 const premiumPlusFeatures = ["Infinite resumes", "Design customizations"];
@@ -63,7 +64,7 @@ const PremiumModal = () => {
               <Button
                 onClick={() =>
                   handlePremiumClick(
-                    process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_MONTHLY!,
+                    env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_MONTHLY,
                   )
                 }
                 disabled={loading}
@@ -88,7 +89,7 @@ const PremiumModal = () => {
                 variant="premium"
                 onClick={() =>
                   handlePremiumClick(
-                    process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_PLUS_MONTHLY!,
+                    env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_PLUS_MONTHLY,
                   )
                 }
                 disabled={loading}
