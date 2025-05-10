@@ -79,7 +79,7 @@ model Education {
 
 model UserSubscription {
   id                      String   @id @default(cuid())
-  user                    String   @unique
+  userId                  String   @unique
   stripeCustomerId        String   @unique
   stripeSubscriptionId    String   @unique
   stripePriceId           String
