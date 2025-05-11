@@ -34,7 +34,15 @@ const GenerateSummaryBtn = ({
     try {
       setLoading(true);
       const aiResponse = await generateSummary(resumeData);
-      oSummaryGenerated(aiResponse);
+      if (typeof aiResponse === "string") {
+        oSummaryGenerated(aiResponse);
+      } else {
+        console.error("AI response is not a string:", aiResponse);
+        toast({
+          description: "An error occurred while generating the summary.",
+          variant: "destructive",
+        });
+      }
     } catch (error) {
       console.error("Error generating summary:", error);
       toast({
