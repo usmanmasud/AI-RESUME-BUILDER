@@ -97,7 +97,14 @@ function InputDialoq({
   async function onSubmit(input: GenerateWorkExperienceInput) {
     try {
       const response = await generateWorkExperience(input);
-      onWorkExperienceGenerate(response);
+      if (response instanceof Error) {
+        toast({
+          description: "An error occurred while generating the summary.",
+          variant: "destructive",
+        });
+      } else {
+        onWorkExperienceGenerate(response);
+      }
     } catch (error) {
       console.log(error);
       toast({
